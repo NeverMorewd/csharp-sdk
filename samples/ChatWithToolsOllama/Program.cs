@@ -26,8 +26,7 @@ foreach (var tool in tools)
 }
 Console.WriteLine();
 
-// Create an IChatClient. (This shows using OpenAIClient, but it could be any other IChatClient implementation.)
-// Provide your own OPENAI_API_KEY via an environment variable.
+// Create an IChatClient. (This shows using OllamaChatClient, but it could be any other IChatClient implementation.)
 using IChatClient chatClient =
     new OllamaChatClient("http://localhost:11434/", "llama3.2:latest")
     .AsBuilder()
