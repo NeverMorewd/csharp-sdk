@@ -3,6 +3,7 @@ using ModelContextProtocol.Protocol.Transport;
 using Microsoft.Extensions.AI;
 
 // Connect to an MCP server
+Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 Console.WriteLine("Connecting client to MCP 'everything' server");
 var mcpClient = await McpClientFactory.CreateAsync(
     new()
@@ -12,8 +13,7 @@ var mcpClient = await McpClientFactory.CreateAsync(
         TransportType = TransportTypes.StdIo,
         TransportOptions = new()
         {
-            ["command"] = "npx",
-            ["arguments"] = "-y @modelcontextprotocol/server-everything",
+            ["command"] = "mcpserver.everything.stdio",
         }
     });
 
