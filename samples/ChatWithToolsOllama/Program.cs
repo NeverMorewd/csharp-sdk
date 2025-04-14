@@ -13,7 +13,8 @@ var mcpClient = await McpClientFactory.CreateAsync(
         TransportType = TransportTypes.StdIo,
         TransportOptions = new()
         {
-            ["command"] = "mcpserver.everything.stdio",
+            ["command"] = ".\\.venv\\Scripts\\python.exe",
+            ["arguments"] = "C:\\Users\\wangd\\weather\\weather.py",
         }
     });
 
