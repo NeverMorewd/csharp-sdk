@@ -19,8 +19,10 @@ using var metricsProvider = Sdk.CreateMeterProviderBuilder()
     .Build();
 using var loggerFactory = LoggerFactory.Create(builder => builder.AddOpenTelemetry(opt => opt.AddOtlpExporter()));
 
+const string serverName = "fileSystem";
+
 // Connect to an MCP server
-Console.WriteLine("Connecting client to MCP 'weather' server");
+Console.WriteLine($"Connecting client to MCP '{serverName}' server");
 
 // Create OpenAI client (or any other compatible with IChatClient)
 // Provide your own OPENAI_API_KEY via an environment variable.
@@ -42,11 +44,15 @@ using IChatClient samplingClient = openAIClient
 var mcpClient = await McpClientFactory.CreateAsync(
     new StdioClientTransport(new()
     {
-        //Command = "npx",
-        //Arguments = ["-y", "--verbose", "@modelcontextprotocol/server-everything"],
-        Name = "weather",
-        Command = ".\\.venv\\Scripts\\python.exe",
-        Arguments = ["C:\\Users\\Wangd\\weather\\weather.py"],
+        //Name = "weather",
+        //Command = ".\\.venv\\Scripts\\python.exe",
+        //Arguments = ["C:\\Users\\Wangd\\weather\\weather.py"],
+        Name = serverName,
+        Command = "npx",
+        Arguments = ["-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/Wangd/Desktop",
+        "/Program Files"],
     }),
     clientOptions: new()
     {

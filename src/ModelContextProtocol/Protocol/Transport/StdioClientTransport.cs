@@ -61,7 +61,7 @@ public sealed class StdioClientTransport : IClientTransport
         {
             // On Windows, for stdio, we need to wrap non-shell commands with cmd.exe /c {command} (usually npx or uvicorn).
             // The stdio transport will not work correctly if the command is not run in a shell.
-            arguments = arguments is null or [] ? ["/c", command] : ["/c", command, ..arguments];
+            arguments = arguments is null or [] ? ["/c", command] : ["/c", command, .. arguments];
             command = "cmd.exe";
         }
 
@@ -121,8 +121,11 @@ public sealed class StdioClientTransport : IClientTransport
             process = new() { StartInfo = startInfo };
 
             // Set up error logging
-            process.ErrorDataReceived += (sender, args) => logger.ReadStderr(endpointName, args.Data ?? "(no data)");
-
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                logger.ReadStderr(endpointName, args.Data ?? "(no data)");
+            };
+            process.OutputDataReceived += Process_OutputDataReceived;
             // We need both stdin and stdout to use a no-BOM UTF-8 encoding. On .NET Core,
             // we can use ProcessStartInfo.StandardOutputEncoding/StandardInputEncoding, but
             // StandardInputEncoding doesn't exist on .NET Framework; instead, it always picks
@@ -162,6 +165,11 @@ public sealed class StdioClientTransport : IClientTransport
             DisposeProcess(process, processStarted, logger, _options.ShutdownTimeout, endpointName);
             throw new McpTransportException("Failed to connect transport", ex);
         }
+    }
+
+    private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+    {
+        //throw new NotImplementedException();
     }
 
     internal static void DisposeProcess(
